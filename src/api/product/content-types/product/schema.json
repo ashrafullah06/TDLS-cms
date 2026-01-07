@@ -1,0 +1,285 @@
+{
+  "kind": "collectionType",
+  "collectionName": "products",
+  "info": {
+    "singularName": "product",
+    "pluralName": "products",
+    "displayName": "Product",
+    "description": "Product catalog for The DNA Lab Clothing"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {
+    "graphql": {
+      "enabled": false
+    }
+  },
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "name",
+      "required": true
+    },
+    "description": {
+      "type": "richtext"
+    },
+    "short_description": {
+      "type": "string"
+    },
+    "care_instructions": {
+      "type": "richtext"
+    },
+    "country_of_origin": {
+      "type": "string"
+    },
+    "factory_base_cost": {
+      "type": "decimal",
+      "default": 0,
+      "private": true
+    },
+    "selling_price": {
+      "type": "decimal",
+      "required": true
+    },
+    "compare_price": {
+      "type": "decimal"
+    },
+    "currency": {
+      "type": "enumeration",
+      "enum": [
+        "BDT",
+        "USD",
+        "EUR",
+        "GBP",
+        "INR",
+        "AUD",
+        "CAD",
+        "JPY",
+        "CNY"
+      ],
+      "default": "BDT",
+      "required": true
+    },
+    "inventory": {
+      "type": "integer",
+      "default": 0
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": [
+        "Draft",
+        "Active",
+        "Archived"
+      ],
+      "default": "Draft"
+    },
+    "fit": {
+      "type": "enumeration",
+      "enum": [
+        "Slim",
+        "Regular",
+        "Relaxed",
+        "Oversized",
+        "DropShoulder"
+      ]
+    },
+    "size_system": {
+      "type": "enumeration",
+      "enum": [
+        "Alpha (XS-XXL: T-shirts, shirts, pants)",
+        "Numeric (single: collar/waist, e.g. 15.5, 32)",
+        "Numeric (waist x length: e.g. 32x30)",
+        "Shoe size (e.g. 42, 8, UK 9)",
+        "Kids age (e.g. 2-3Y, 4-5Y)",
+        "Free / one size"
+      ],
+      "default": "Alpha (XS-XXL: T-shirts, shirts, pants)",
+      "pluginOptions": {
+        "content-manager": {
+          "description": "Choose how sizes are defined: Alpha (XS-XXL) for T-shirts/shirts/pants; Numeric (single) for collar/waist; Numeric (waist x length) for jeans/trousers; Shoe size; Kids age; or Free / one size."
+        }
+      }
+    },
+    "images": {
+      "type": "media",
+      "multiple": true,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "gallery": {
+      "type": "media",
+      "multiple": true,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "product_variants": {
+      "type": "component",
+      "repeatable": true,
+      "component": "variant.product-variant"
+    },
+    "seo": {
+      "type": "component",
+      "repeatable": true,
+      "component": "common.seo-meta"
+    },
+    "alt_names_entries": {
+      "type": "component",
+      "repeatable": true,
+      "component": "common.alt-name"
+    },
+    "materials_lines": {
+      "type": "component",
+      "repeatable": true,
+      "component": "product.material-line"
+    },
+    "supplier": {
+      "type": "component",
+      "repeatable": false,
+      "component": "supplier.supplier-info"
+    },
+    "translations": {
+      "type": "component",
+      "repeatable": true,
+      "component": "common.translation"
+    },
+    "creator": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "admin::user",
+      "configurable": false
+    },
+    "last_updated_by": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "admin::user",
+      "configurable": false
+    },
+    "verifier": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "admin::user",
+      "configurable": false
+    },
+    "factory": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::factory.factory"
+    },
+    "categories": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::category.category",
+      "mappedBy": "products"
+    },
+    "sub_categories": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::sub-category.sub-category",
+      "mappedBy": "products"
+    },
+    "super_categories": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::super-category.super-category",
+      "mappedBy": "products"
+    },
+    "audience_categories": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::audience-category.audience-category",
+      "mappedBy": "products"
+    },
+    "age_groups": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::age-group.age-group",
+      "mappedBy": "products"
+    },
+    "gender_groups": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::gender-group.gender-group",
+      "mappedBy": "products"
+    },
+    "brand_tiers": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::brand-tier.brand-tier",
+      "mappedBy": "products"
+    },
+    "events_products_collections": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::events-products-collection.events-products-collection",
+      "mappedBy": "products"
+    },
+    "tags": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::tag.tag",
+      "mappedBy": "products"
+    },
+    "reviews": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::review.review",
+      "mappedBy": "product"
+    },
+    "uuid": {
+      "type": "string",
+      "unique": true
+    },
+    "product_code": {
+      "type": "string",
+      "unique": true
+    },
+    "base_sku": {
+      "type": "string"
+    },
+    "generated_sku": {
+      "type": "string",
+      "configurable": false
+    },
+    "barcode": {
+      "type": "string",
+      "configurable": false,
+      "unique": true
+    },
+    "factory_batch_code": {
+      "type": "string",
+      "private": true
+    },
+    "label_serial_code": {
+      "type": "string",
+      "private": true
+    },
+    "tag_serial_code": {
+      "type": "string",
+      "private": true
+    },
+    "hs_code": {
+      "type": "string"
+    },
+    "color_code": {
+      "type": "string"
+    },
+    "is_featured": {
+      "type": "boolean"
+    },
+    "is_archived": {
+      "type": "boolean",
+      "default": false
+    },
+    "disable_frontend": {
+      "type": "boolean",
+      "default": false
+    }
+  }
+}

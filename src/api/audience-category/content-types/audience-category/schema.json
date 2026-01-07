@@ -1,0 +1,48 @@
+{
+  "kind": "collectionType",
+  "collectionName": "audience_categories",
+  "info": {
+    "singularName": "audience-category",
+    "pluralName": "audience-categories",
+    "displayName": "audience category",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "description": {
+      "type": "text"
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "name"
+    },
+    "priority": {
+      "type": "integer"
+    },
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "events_products_collections": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::events-products-collection.events-products-collection",
+      "mappedBy": "audience_categories"
+    },
+    "age_groups": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::age-group.age-group",
+      "mappedBy": "audience_categories"
+    },
+    "products": {
+  "type": "relation",
+  "relation": "manyToMany",
+  "target": "api::product.product",
+  "inversedBy": "audience_categories"
+}
+
+  }
+}

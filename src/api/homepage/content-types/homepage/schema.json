@@ -1,0 +1,80 @@
+{
+  "kind": "singleType",
+  "collectionName": "homepages",
+  "info": {
+    "singularName": "homepage",
+    "pluralName": "homepages",
+    "displayName": "homepage",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "hero_slides": {
+      "type": "component",
+      "repeatable": true,
+      "component": "sections.hero-slides-1"
+    },
+    "hero_slides_1": {
+      "type": "component",
+      "repeatable": true,
+      "component": "sections.hero-slides-1"
+    },
+    "hero_slides_2": {
+      "type": "component",
+      "repeatable": true,
+      "component": "sections.hero-slides-1"
+    },
+    "hero_slides_3": {
+      "type": "component",
+      "repeatable": true,
+      "component": "sections.hero-slides-1"
+    },
+    "hero_slides_4": {
+      "type": "component",
+      "repeatable": true,
+      "component": "sections.hero-slides-1"
+    },
+    "hero_slides_5": {
+      "type": "component",
+      "repeatable": true,
+      "component": "sections.hero-slides-1"
+    },
+    "hero_slides_6": {
+      "type": "component",
+      "repeatable": true,
+      "component": "sections.hero-slides-1"
+    },
+    "hero_slides_7": {
+      "type": "component",
+      "repeatable": true,
+      "component": "sections.hero-slides-1"
+    },
+    "hero_slides_8": {
+      "type": "component",
+      "repeatable": true,
+      "component": "sections.hero-slides-1"
+    },
+    "hero_slides_9": {
+      "type": "component",
+      "repeatable": true,
+      "component": "sections.hero-slides-1"
+    },
+    "hero_slides_10": {
+      "type": "component",
+      "repeatable": true,
+      "component": "sections.hero-slides-1"
+    },
+    "hero_slides_11": {
+      "type": "component",
+      "repeatable": true,
+      "component": "sections.hero-slides-1"
+    },
+    "hero_slides_12": {
+      "type": "component",
+      "repeatable": true,
+      "component": "sections.hero-slides-1"
+    }
+  }
+}

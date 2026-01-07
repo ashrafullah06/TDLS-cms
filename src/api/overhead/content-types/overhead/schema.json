@@ -1,0 +1,50 @@
+{
+  "kind": "collectionType",
+  "collectionName": "overheads",
+  "info": {
+    "singularName": "overhead",
+    "pluralName": "overheads",
+    "displayName": "overhead"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "code": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "bucket": {
+      "type": "enumeration",
+      "enum": [
+        "RENT",
+        "  WAREHOUSE_RENT",
+        "  UTILITIES_BASE",
+        "  SALARIES_ADMIN",
+        "  SECURITY_CLEANING",
+        "  DECORATION_FITOUT",
+        "  FURNITURE_FIXTURES",
+        "  AC_FAN",
+        "  MACHINES_ELECTRIC",
+        "  IT_EQUIPMENT",
+        "  WEBSITE_DEV",
+        "  WEBSITE_HOSTING",
+        "  ACCOUNTING_COMPLIANCE",
+        "  INSURANCE",
+        "  FINANCING_INTEREST",
+        "  MISC"
+      ]
+    },
+    "annual_amount": {
+      "type": "decimal"
+    },
+    "depreciation_years": {
+      "type": "integer"
+    },
+    "effective_from": {
+      "type": "date"
+    }
+  }
+}

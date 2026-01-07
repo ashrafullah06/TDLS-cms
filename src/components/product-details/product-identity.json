@@ -1,0 +1,33 @@
+{
+  "collectionName": "components_product_details_product_identities",
+  "info": { "displayName": "product_identity", "description": "" },
+  "options": {},
+  "attributes": {
+    "factory_batch_code": { "type": "string" },
+    "label_serial_code": { "type": "string" },
+    "tag_serial_code": { "type": "string" },
+    "internal_notes": { "type": "blocks" },
+
+    "creator": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user"
+    },
+
+    "verifier": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user"
+    },
+
+    "verified_at": { "type": "datetime" },
+    "verification_status": {
+      "type": "enumeration",
+      "enum": ["pending", "verified", "rejected"]
+    },
+
+    "arch_ref": {
+      "type": "string"
+    }
+  }
+}

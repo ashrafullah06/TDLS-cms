@@ -1,0 +1,117 @@
+{
+  "collectionName": "components_variant_size_stocks",
+  "info": {
+    "displayName": "Size Stock",
+    "description": "Concrete inventory & pricing for a single size within a color variant"
+  },
+  "options": {},
+  "attributes": {
+    "size_name": {
+      "type": "enumeration",
+      "enum": [
+        "XXS",
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL",
+        "XXL",
+        "XXXL",
+        "XXXXL",
+        "ONE"
+      ],
+      "required": true,
+      "pluginOptions": {
+        "content-manager": {
+          "description": "Label printed on the garment tag (e.g. XS, S, M, L, XL, ONE). For numeric systems (collar, waist x length, shoe, kids) you still enter the label used on the tag."
+        }
+      }
+    },
+    "stock_quantity": {
+      "type": "integer",
+      "default": 0
+    },
+    "price": {
+      "type": "integer"
+    },
+    "compare_at_price": {
+      "type": "integer"
+    },
+    "price_override": {
+      "type": "integer"
+    },
+    "generated_sku": {
+      "type": "string"
+    },
+    "barcode": {
+      "type": "string"
+    },
+    "reorder_level": {
+      "type": "integer"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    },
+    "restock_date": {
+      "type": "datetime"
+    },
+    "sold_count": {
+      "type": "integer",
+      "default": 0
+    },
+    "backorder_allowed": {
+      "type": "boolean",
+      "default": false
+    },
+    "warehouse_location": {
+      "type": "enumeration",
+      "enum": [
+        "Dhaka",
+        "Khulna",
+        "Sylhet",
+        "Chittagong"
+      ]
+    },
+    "inventory_status": {
+      "type": "enumeration",
+      "enum": [
+        "in stock",
+        "low stock",
+        "restock due"
+      ]
+    },
+    "size_system": {
+      "type": "enumeration",
+      "enum": [
+        "Alpha (XS-XXL: T-shirts, shirts, pants)",
+        "Numeric (single: collar/waist, e.g. 15.5, 32)",
+        "Numeric (waist x length: e.g. 32x30)",
+        "Shoe size (e.g. 42, 8, UK 9)",
+        "Kids age (e.g. 2-3Y, 4-5Y)",
+        "Free / one size"
+      ],
+      "pluginOptions": {
+        "content-manager": {
+          "visible": false
+        }
+      }
+    },
+    "primary_value": {
+      "type": "decimal",
+      "pluginOptions": {
+        "content-manager": {
+          "visible": false
+        }
+      }
+    },
+    "secondary_value": {
+      "type": "decimal",
+      "pluginOptions": {
+        "content-manager": {
+          "visible": false
+        }
+      }
+    }
+  }
+}

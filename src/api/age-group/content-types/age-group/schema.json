@@ -1,0 +1,54 @@
+{
+  "kind": "collectionType",
+  "collectionName": "age_groups",
+  "info": {
+    "singularName": "age-group",
+    "pluralName": "age-groups",
+    "displayName": "age_group",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "name"
+    },
+    "description": {
+      "type": "string"
+    },
+    "priority": {
+      "type": "integer"
+    },
+    "unit": {
+      "type": "enumeration",
+      "enum": [
+        "months",
+        "years"
+      ]
+    },
+    "audience_categories": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::audience-category.audience-category",
+      "inversedBy": "age_groups"
+    },
+    "gender_groups": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::gender-group.gender-group",
+      "mappedBy": "age_groups"
+    },
+    "products": {
+  "type": "relation",
+  "relation": "manyToMany",
+  "target": "api::product.product",
+  "inversedBy": "age_groups"
+}
+
+  }
+}

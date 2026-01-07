@@ -1,0 +1,66 @@
+{
+  "kind": "collectionType",
+  "collectionName": "product_costing_overrides",
+  "info": {
+    "singularName": "product-costing-override",
+    "pluralName": "product-costing-overrides",
+    "displayName": "product_costing_override",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "materials_cost": {
+      "type": "decimal"
+    },
+    "labor_cost": {
+      "type": "decimal"
+    },
+    "packaging_cost": {
+      "type": "decimal"
+    },
+    "quality_control_cost": {
+      "type": "decimal"
+    },
+    "inbound_transport_cost": {
+      "type": "decimal"
+    },
+    "storage_cost": {
+      "type": "decimal"
+    },
+    "handling_cost": {
+      "type": "decimal"
+    },
+    "misc_direct_cost": {
+      "type": "decimal"
+    },
+    "expected_free_ship_subsidy_unit": {
+      "type": "decimal"
+    },
+    "reship_rate": {
+      "type": "decimal"
+    },
+    "reship_cost_avg": {
+      "type": "decimal"
+    },
+    "unsold_pct_override": {
+      "type": "decimal"
+    },
+    "target_margin_override": {
+      "type": "decimal"
+    },
+    "vat_rate_override": {
+      "type": "decimal"
+    },
+    "effective_from": {
+      "type": "datetime"
+    },
+    "effective_to": {
+      "type": "datetime"
+    },
+    "notes": {
+      "type": "blocks"
+    }
+  }
+}

@@ -1,0 +1,133 @@
+{
+  "kind": "collectionType",
+  "collectionName": "reviews",
+  "info": {
+    "singularName": "review",
+    "pluralName": "reviews",
+    "displayName": "review",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "comment": {
+      "type": "blocks"
+    },
+    "author_name": {
+      "type": "string"
+    },
+    "verified": {
+      "type": "boolean"
+    },
+    "product": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::product.product",
+      "inversedBy": "reviews"
+    },
+    "helpful_count": {
+      "type": "integer"
+    },
+    "user": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "reviews"
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": [
+        "pending",
+        "approved",
+        "rejected"
+      ]
+    },
+    "is_featured": {
+      "type": "boolean"
+    },
+    "images": {
+      "type": "media",
+      "multiple": true,
+      "required": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "locale": {
+      "type": "text"
+    },
+    "response": {
+      "type": "blocks"
+    },
+    "content": {
+      "type": "richtext"
+    },
+    "rating": {
+      "type": "enumeration",
+      "enum": [
+        "one_star",
+        "two_star",
+        "three_star",
+        "four_star",
+        "five_star"
+      ]
+    },
+    "videos": {
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ],
+      "type": "media",
+      "multiple": true
+    },
+    "reviewed_at": {
+      "type": "datetime"
+    },
+    "approved": {
+      "type": "boolean"
+    },
+    "approved_by": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "admin::user"
+    },
+    "reply": {
+      "type": "blocks"
+    },
+    "likes": {
+      "type": "biginteger"
+    },
+    "flags": {
+      "type": "integer"
+    },
+    "is_archived": {
+      "type": "boolean"
+    },
+    "archived_by": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "admin::user"
+    },
+    "archive_reason": {
+      "type": "enumeration",
+      "enum": [
+        "spam",
+        "abusive",
+        "duplicate",
+        "others"
+      ]
+    },
+    "archive_date": {
+      "type": "datetime"
+    },
+    "audit_log": {
+      "type": "json"
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "collectionName": "components_contact_social_links",
+  "info": {
+    "displayName": "social_links"
+  },
+  "options": {},
+  "attributes": {
+    "platform": {
+      "type": "enumeration",
+      "enum": [
+        "Facebook",
+        "Youtube",
+        "Google",
+        "Pinterest",
+        "Instagram",
+        "TikTok"
+      ]
+    },
+    "links": {
+      "type": "string"
+    }
+  }
+}

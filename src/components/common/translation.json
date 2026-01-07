@@ -1,0 +1,25 @@
+{
+  "collectionName": "components_common_translations",
+  "info": {
+    "displayName": "Translation",
+    "description": "Localized product information"
+  },
+  "options": {},
+  "attributes": {
+    "locale": {
+      "type": "enumeration",
+      "enum": ["en", "bn"],
+      "default": "en",
+      "required": true
+    },
+    "name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "text"
+    },
+    "short_description": {
+      "type": "string"
+    }
+  }
+}

@@ -1,0 +1,74 @@
+{
+  "kind": "singleType",
+  "collectionName": "promobar_configs",
+  "info": {
+    "singularName": "promobar-config",
+    "pluralName": "promobar-configs",
+    "displayName": "promobar-config",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "enabled": {
+      "type": "boolean"
+    },
+    "background_color": {
+      "type": "string"
+    },
+    "text_color": {
+      "type": "string"
+    },
+    "closable": {
+      "type": "boolean"
+    },
+    "speed_px_per_sec": {
+      "type": "integer"
+    },
+    "gap_ms": {
+      "type": "integer"
+    },
+    "dwell_ms": {
+      "type": "integer"
+    },
+    "animation": {
+      "type": "enumeration",
+      "enum": [
+        "none",
+        "fade",
+        "slide",
+        "slide-right",
+        "slide-up",
+        "slide-down",
+        "marquee",
+        "marquee-right",
+        "marquee-up",
+        "marquee-down",
+        "typewriter",
+        "zoom",
+        "bounce",
+        "flip",
+        "highlight",
+        "sticky",
+        "collapsible",
+        "pulse",
+        "wave",
+        "cycle",
+        "manual",
+        "auto_dismiss",
+        "persistent",
+        "hover",
+        "framer_motion",
+        "gsap",
+        "per_message"
+      ]
+    },
+    "starts_at": {
+      "type": "datetime"
+    },
+    "ends_at": {
+      "type": "datetime"
+    }
+  }
+}

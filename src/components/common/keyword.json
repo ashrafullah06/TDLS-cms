@@ -1,0 +1,25 @@
+{
+  "collectionName": "components_common_keywords",
+  "info": { "displayName": "Keyword" },
+  "attributes": {
+    "value": {
+      "type": "string",
+      "required": true,
+      "maxLength": 48
+    },
+    "lang": {
+      "type": "enumeration",
+      "enum": ["en", "bn"],
+      "default": "en"
+    },
+    "usage": {
+      "type": "enumeration",
+      "enum": ["seo", "search", "tag"],
+      "default": "seo"
+    },
+    "is_primary": {
+      "type": "boolean",
+      "default": false
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "collectionName": "components_common_seo_meta",
+  "info": { "displayName": "SEO Meta" },
+  "attributes": {
+    "title": { "type": "string", "maxLength": 70 },
+    "description": { "type": "text", "maxLength": 160 },
+    "lang": {
+      "type": "enumeration",
+      "enum": ["en", "bn"],
+      "default": "en"
+    },
+    "channel": {
+      "type": "enumeration",
+      "enum": ["website", "marketplace", "social"],
+      "default": "website"
+    },
+    "keywords": {
+      "type": "component",
+      "repeatable": true,
+      "component": "common.keyword"
+    }
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "kind": "collectionType",
+  "collectionName": "brand_tiers",
+  "info": {
+    "singularName": "brand-tier",
+    "pluralName": "brand-tiers",
+    "displayName": "brand_tier"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "name"
+    },
+    "description": {
+      "type": "blocks"
+    },
+    "priority": {
+      "type": "integer"
+    },
+    "is_active": {
+      "type": "boolean"
+    },
+    "products": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::product.product",
+      "inversedBy": "brand_tiers"
+    }
+  }
+}

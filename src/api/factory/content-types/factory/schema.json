@@ -1,0 +1,44 @@
+
+{
+  "kind": "collectionType",
+  "collectionName": "factories",
+  "info": {
+    "singularName": "factory",
+    "pluralName": "factories",
+    "displayName": "Factory",
+    "description": "Manufacturing factories for TDLC products"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "code": {
+      "type": "string",
+      "unique": true
+    },
+    "contact_person": {
+      "type": "string"
+    },
+    "phone": {
+      "type": "string"
+    },
+    "email": {
+      "type": "email"
+    },
+    "address": {
+      "type": "text"
+    },
+    "country": {
+      "type": "string"
+    },
+    "is_active": {
+      "type": "boolean"
+    }
+  }
+}

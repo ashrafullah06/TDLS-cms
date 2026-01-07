@@ -1,0 +1,41 @@
+{
+  "kind": "collectionType",
+  "collectionName": "super_categories",
+  "info": {
+    "singularName": "super-category",
+    "pluralName": "super-categories",
+    "displayName": "super_category",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "name"
+    },
+    "priority": {
+      "type": "integer"
+    },
+    "type": {
+      "type": "enumeration",
+      "enum": [
+        "living",
+        "dining",
+        "shoe",
+        "jewellery",
+        "skin and hair"
+      ]
+    },
+    "products": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::product.product",
+      "inversedBy": "super_categories"
+    }
+  }
+}

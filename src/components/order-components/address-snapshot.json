@@ -1,0 +1,49 @@
+{
+  "collectionName": "components_order_components_address_snapshots",
+  "info": {
+    "displayName": "address_snapshot",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "full_name": {
+      "type": "string",
+      "required": true
+    },
+    "phone_number": {
+      "type": "string",
+      "required": true
+    },
+    "address_line1": {
+      "type": "string",
+      "required": true
+    },
+    "address_line2_Union": {
+      "type": "string",
+      "required": true
+    },
+    "Police_station_town_upazila": {
+      "type": "string",
+      "required": true
+    },
+    "postal_code": {
+      "type": "string",
+      "required": false
+    },
+    "district": {
+      "type": "string",
+      "required": true
+    },
+    "division": {
+      "type": "string",
+      "required": true
+    },
+    "country": {
+      "type": "string",
+      "required": true
+    },
+    "note": {
+      "type": "blocks"
+    }
+  }
+}

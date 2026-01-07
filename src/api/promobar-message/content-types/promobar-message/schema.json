@@ -1,0 +1,23 @@
+{
+  "kind": "collectionType",
+  "collectionName": "promobar_messages",
+  "info": {
+    "singularName": "promobar-message",
+    "pluralName": "promobar-messages",
+    "displayName": "promobar-message"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "enabled": {
+      "type": "boolean"
+    },
+    "order": {
+      "type": "integer"
+    },
+    "message": {
+      "type": "string"
+    }
+  }
+}

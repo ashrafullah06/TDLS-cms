@@ -1,0 +1,58 @@
+﻿diff --git a/package/dist/server/index.js b/node_modules/@strapi/content-releases/dist/server/index.js
+index 404c3be..d8097cc 100644
+--- a/package/dist/server/index.js
++++ b/node_modules/@strapi/content-releases/dist/server/index.js
+@@ -150,7 +150,7 @@ async function migrateIsValidAndStatusReleases() {
+           strapi
+         });
+         if (populatedEntry) {
+-          const isEntryValid = getEntryValidStatus(action.contentType, populatedEntry, { strapi });
++          const isEntryValid = await getEntryValidStatus(action.contentType, populatedEntry, { strapi });
+           await strapi.db.query(RELEASE_ACTION_MODEL_UID).update({
+             where: {
+               id: action.id
+@@ -415,9 +415,9 @@ const bootstrap = async ({ strapi: strapi2 }) => {
+     });
+     getService("scheduling", { strapi: strapi2 }).syncFromDatabase().catch((err) => {
+       strapi2.log.error(
+-        "Error while syncing scheduled jobs from the database in the content-releases plugin. This could lead to errors in the releases scheduling."
++        "Error while syncing scheduled jobs from the database in the content-releases plugin. This could lead to errors in the releases scheduling.",
++        { error: err }
+       );
+-      throw err;
+     });
+     Object.entries(ALLOWED_WEBHOOK_EVENTS).forEach(([key, value]) => {
+       strapi2.webhookStore.addAllowedEvent(key, value);
+@@ -1211,11 +1211,30 @@ const createSchedulingService = ({ strapi: strapi2 }) => {
+       }
+       const job = nodeSchedule.scheduleJob(scheduleDate, async () => {
+         try {
+-          await getService("release").publish(releaseId);
++          await getService("release", { strapi: strapi2 }).publish(releaseId);
+         } catch (error) {
++          try {
++            strapi2.log.error(
++              "[Content Releases] Error while publishing a scheduled release (job execution).",
++              { error }
++            );
++          } catch {
++          }
++        } finally {
++          this.cancel(releaseId);
+         }
+-        this.cancel(releaseId);
+       });
++
++      // Prevent unhandled "error" events from crashing the process (node-schedule Job is an EventEmitter).
++      if (job && typeof job.on === "function") {
++        job.on("error", (err) => {
++          try {
++            strapi2.log.error("[Content Releases] Scheduled job emitted an error event.", { error: err });
++          } catch {
++          }
++        });
++      }
++
+       if (scheduledJobs.has(releaseId)) {
+         this.cancel(releaseId);
+       }

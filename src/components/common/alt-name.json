@@ -1,0 +1,24 @@
+{
+  "collectionName": "components_common_alt_names",
+  "info": { "displayName": "Alt Name" },
+  "attributes": {
+    "value": {
+      "type": "string",
+      "required": true
+    },
+    "lang": {
+      "type": "enumeration",
+      "enum": ["en", "bn"],
+      "default": "en"
+    },
+    "usage": {
+      "type": "enumeration",
+      "enum": ["default", "marketplace", "nickname", "search"],
+      "default": "default"
+    },
+    "is_primary": {
+      "type": "boolean",
+      "default": false
+    }
+  }
+}

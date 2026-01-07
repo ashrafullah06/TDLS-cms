@@ -1,0 +1,28 @@
+{
+  "kind": "singleType",
+  "collectionName": "loyaltypointhistories",
+  "info": {
+    "singularName": "loyaltypointhistory",
+    "pluralName": "loyaltypointhistories",
+    "displayName": "loyaltypointhistory"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "users_permissions_user": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user"
+    },
+    "points": {
+      "type": "integer"
+    },
+    "activity": {
+      "type": "string"
+    },
+    "date": {
+      "type": "datetime"
+    }
+  }
+}

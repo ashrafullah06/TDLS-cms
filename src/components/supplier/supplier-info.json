@@ -1,0 +1,13 @@
+{
+  "collectionName": "components_supplier_supplier_infos",
+  "info": {
+    "displayName": "Supplier Info",
+    "description": "Supplier details for product sourcing"
+  },
+  "attributes": {
+    "name": { "type": "string", "required": true },
+    "contact_email": { "type": "email" },
+    "contact_phone": { "type": "string" },
+    "notes": { "type": "text" }
+  }
+}

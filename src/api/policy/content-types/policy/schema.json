@@ -1,0 +1,41 @@
+{
+  "kind": "collectionType",
+  "collectionName": "policies",
+  "info": {
+    "singularName": "policy",
+    "pluralName": "policies",
+    "displayName": "policy"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "title": {
+      "type": "enumeration",
+      "enum": [
+        "return and exchange policy",
+        "shipping policy",
+        "privacy policy",
+        "point redemption policy",
+        "digital currency policy",
+        "refund policy"
+      ]
+    },
+    "name": {
+      "type": "string"
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "name"
+    },
+    "description": {
+      "type": "blocks"
+    },
+    "last_updated_by_personnel": {
+      "type": "datetime"
+    },
+    "is_active": {
+      "type": "boolean"
+    }
+  }
+}

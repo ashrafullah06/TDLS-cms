@@ -1,0 +1,61 @@
+diff --git a/node_modules/node-schedule/lib/Invocation.js b/node_modules/node-schedule/lib/Invocation.js
+index 1f9cb3e..8dc8e20 100644
+--- a/node_modules/node-schedule/lib/Invocation.js
++++ b/node_modules/node-schedule/lib/Invocation.js
+@@ -11,6 +11,38 @@ let currentInvocation = null;
+ const DoesntRecur = new RecurrenceRule();
+ DoesntRecur.recurs = false;
+ 
++
++
++/**
++ * IMPORTANT FIX:
++ * Node.js will CRASH if an EventEmitter emits 'error' without at least one 'error' listener.
++ * This happens in long-running servers when a scheduled job throws/rejects and no one attached job.on('error', ...).
++ *
++ * We keep all existing behavior, but safely emit 'error' only if a listener exists.
++ * If no listener exists, we log the error instead of crashing the process.
++ */
++function emitJobError(job, err) {
++  try {
++    const hasListener =
++      (job && typeof job.listenerCount === 'function' && job.listenerCount('error') > 0) ||
++      (job && typeof job.listeners === 'function' && job.listeners('error').length > 0);
++
++    if (!hasListener) {
++      // Prevent "Unhandled 'error' event" crash.
++      try {
++        console.error('[node-schedule] Job error (no error listener attached):', err);
++      } catch {}
++      return;
++    }
++
++    job.emit('error', err);
++  } catch (emitErr) {
++    // Never allow emit logic itself to crash the process.
++    try {
++      console.error('[node-schedule] Failed while emitting job error:', emitErr);
++    } catch {}
++  }
++}
+ /* Invocation object */
+ function Invocation(job, fireDate, recurrenceRule, endDate) {
+   this.job = job;
+@@ -274,7 +306,7 @@ function prepareNextInvocation() {
+             job.emit('success', value);
+             job.running -= 1;
+           }).catch(function (err) {
+-            job.emit('error', err);
++            emitJobError(job, err); // FIX: safe error emission
+             job.running -= 1;
+           });
+         } else {
+@@ -282,7 +314,7 @@ function prepareNextInvocation() {
+           job.running -= 1;
+         }
+       } catch (err) {
+-        job.emit('error', err);
++        emitJobError(job, err); // FIX: safe error emission
+         job.running -= 1;
+       }
+ 

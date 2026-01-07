@@ -1,0 +1,114 @@
+{
+  "kind": "collectionType",
+  "collectionName": "tags",
+  "info": {
+    "singularName": "tag",
+    "pluralName": "tags",
+    "displayName": "tag",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "name"
+    },
+    "description": {
+      "type": "blocks"
+    },
+    "tag_type": {
+      "type": "enumeration",
+      "enum": [
+        "organic",
+        "cotton",
+        "on_sale",
+        "out_of_stock",
+        "coming_soon",
+        "best_seller",
+        "trending",
+        "hot_pick",
+        "linen",
+        "modal",
+        "bamboo",
+        "slim_fit",
+        "relaxed_fit",
+        "oversized_fit",
+        "minimalist",
+        "bold",
+        "luxury",
+        "summer",
+        "winter",
+        "monsoon",
+        "eid_collection",
+        "festive",
+        "pahela_boishak",
+        "launch_week",
+        "men",
+        "women",
+        "kids",
+        "unisex",
+        "young",
+        "gym",
+        "casual",
+        "formal",
+        "loungewear",
+        "made_in_Bangladesh",
+        "fair_trade",
+        "moisture_wicking",
+        "anti_odor",
+        "stretchable"
+      ]
+    },
+    "is_featured": {
+      "type": "boolean"
+    },
+    "priority": {
+      "type": "integer"
+    },
+    "color_code": {
+      "type": "enumeration",
+      "enum": [
+        "Black",
+        "Jet Black",
+        "Charcoal Grey",
+        "Ash Grey",
+        "Cream White",
+        "Ivory White",
+        "Sand Beige",
+        "Stone Beige",
+        "Olive Green",
+        "Forest Green",
+        "Navy Blue",
+        "Sky Blue",
+        "Dusty Pink",
+        "Wine Red",
+        "Maroon",
+        "White",
+        "Yellow",
+        "Blue",
+        "Deep_Blue",
+        "Green",
+        "Red"
+      ]
+    },
+    "categories": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::category.category",
+      "inversedBy": "tags"
+    },
+    "products": {
+  "type": "relation",
+  "relation": "manyToMany",
+  "target": "api::product.product",
+  "inversedBy": "tags"
+
+
+    }
+  }
+}

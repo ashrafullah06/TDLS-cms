@@ -1,0 +1,44 @@
+{
+  "kind": "collectionType",
+  "collectionName": "product_courier_rate_cards",
+  "info": {
+    "singularName": "product-courier-rate-card",
+    "pluralName": "product-courier-rate-cards",
+    "displayName": "product_courier_rate_card"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "products": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::product.product",
+      "mappedBy": "product_courier_rate_card"
+    },
+    "courier_code": {
+      "type": "string"
+    },
+    "service_code": {
+      "type": "string"
+    },
+    "zone": {
+      "type": "string"
+    },
+    "first_ship_cost": {
+      "type": "decimal"
+    },
+    "reship_cost": {
+      "type": "decimal"
+    },
+    "effective_from": {
+      "type": "datetime"
+    },
+    "effective_to": {
+      "type": "datetime"
+    },
+    "notes": {
+      "type": "blocks"
+    }
+  }
+}

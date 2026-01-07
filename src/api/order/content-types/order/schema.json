@@ -1,0 +1,105 @@
+{
+  "kind": "collectionType",
+  "collectionName": "orders",
+  "info": {
+    "singularName": "order",
+    "pluralName": "orders",
+    "displayName": "order",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "order_id": {
+      "type": "uid"
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": [
+        "pending",
+        "paid",
+        "shipped",
+        "delivered",
+        "cancelled",
+        "returned",
+        "exchanged",
+        "refunded",
+        "processing"
+      ]
+    },
+    "user": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "orders"
+    },
+    "total_amount": {
+      "type": "decimal"
+    },
+    "payment_method": {
+      "type": "enumeration",
+      "enum": [
+        "cash_on_delivery",
+        "bkash",
+        "nagad",
+        "rocket",
+        "visa_card",
+        "amex",
+        "master_card",
+        "gpay"
+      ]
+    },
+    "payment_status": {
+      "type": "enumeration",
+      "enum": [
+        "unpaid",
+        "paid",
+        "pending",
+        "failed",
+        "refunded_to_mfs_or_bank_account",
+        "refunded_to_customer_digital_tdlc_wallet",
+        "paid_from_customer_digital_tdlc_wallet"
+      ]
+    },
+    "transaction_id": {
+      "type": "uid"
+    },
+    "invoice_url": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "placed_at": {
+      "type": "datetime"
+    },
+    "product_items": {
+      "displayName": "product_items",
+      "type": "component",
+      "repeatable": true,
+      "component": "order-components.product-items"
+    },
+    "archive_record": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::archive-record.archive-record",
+      "mappedBy": "affected_order"
+    },
+    "shipping_address": {
+      "type": "component",
+      "repeatable": false,
+      "component": "order-components.address-snapshot"
+    },
+    "billing_address": {
+      "type": "component",
+      "repeatable": true,
+      "component": "order-components.address-snapshot"
+    }
+  }
+}

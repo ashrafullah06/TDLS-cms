@@ -1,0 +1,9 @@
+{
+  "collectionName": "components_product_material_lines_v2",
+  "info": {
+    "displayName": "material-line",
+    "description": "Material line item for Product"
+  },
+  "options": {},
+  "attributes": {}
+}

@@ -1,0 +1,31 @@
+{
+  "kind": "collectionType",
+  "collectionName": "referrals",
+  "info": {
+    "singularName": "referral",
+    "pluralName": "referrals",
+    "displayName": "referral"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "referrer": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "referrals"
+    },
+    "reffered": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user"
+    },
+    "is_redeemed": {
+      "type": "boolean"
+    },
+    "add_activated_at": {
+      "type": "datetime"
+    }
+  }
+}

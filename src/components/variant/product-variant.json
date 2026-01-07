@@ -1,0 +1,41 @@
+{
+  "collectionName": "components_variant_product_variants",
+  "info": {
+    "displayName": "Product Variant",
+    "description": "Variants for a product (color + size matrix)"
+  },
+  "options": {},
+  "attributes": {
+    "color": {
+      "type": "string",
+      "required": true
+    },
+    "color_key": {
+      "type": "string"
+    },
+    "color_code": {
+      "type": "string"
+    },
+    "size": {
+      "type": "string"
+    },
+    "variant_image": {
+      "type": "media",
+      "multiple": true,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "size_stocks": {
+      "type": "component",
+      "repeatable": true,
+      "component": "variant.size-stock"
+    },
+    "generated_sku": {
+      "type": "string"
+    },
+    "barcode": {
+      "type": "string"
+    }
+  }
+}

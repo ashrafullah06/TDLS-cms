@@ -1,0 +1,50 @@
+{
+  "kind": "collectionType",
+  "collectionName": "gender_groups",
+  "info": {
+    "singularName": "gender-group",
+    "pluralName": "gender-groups",
+    "displayName": "gender_group",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "gender_group": {
+      "type": "enumeration",
+      "enum": [
+        "baby girl",
+        "baby boy",
+        "teen girl",
+        "teen boy"
+      ]
+    },
+    "name": {
+      "type": "string"
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "name"
+    },
+    "description": {
+      "type": "blocks"
+    },
+    "priority": {
+      "type": "integer"
+    },
+    "age_groups": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::age-group.age-group",
+      "inversedBy": "gender_groups"
+    },
+   "products": {
+  "type": "relation",
+  "relation": "manyToMany",
+  "target": "api::product.product",
+  "inversedBy": "gender_groups"
+}
+
+  }
+}

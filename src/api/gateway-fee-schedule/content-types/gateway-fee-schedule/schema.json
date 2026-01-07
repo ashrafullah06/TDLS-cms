@@ -1,0 +1,52 @@
+{
+  "kind": "collectionType",
+  "collectionName": "gateway_fee_schedules",
+  "info": {
+    "singularName": "gateway-fee-schedule",
+    "pluralName": "gateway-fee-schedules",
+    "displayName": "gateway_fee_schedule"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "provider": {
+      "type": "enumeration",
+      "enum": [
+        "SSL_COMMERZ",
+        "BKASH",
+        "NAGAD",
+        "CASH_ON_DELIVERY",
+        "STRIPE",
+        "MANUAL",
+        "SHOPPING_ATM_CARD",
+        "DEBIT_CARD",
+        "MASTER_CARD",
+        "VISA_CARD",
+        "AMEX_CARD",
+        "CREDIT_CARD"
+      ]
+    },
+    "pct": {
+      "type": "decimal"
+    },
+    "fixed": {
+      "type": "decimal"
+    },
+    "min_fee": {
+      "type": "decimal"
+    },
+    "cap_fee": {
+      "type": "decimal"
+    },
+    "effective_from": {
+      "type": "datetime"
+    },
+    "effective_to": {
+      "type": "datetime"
+    },
+    "notes": {
+      "type": "blocks"
+    }
+  }
+}

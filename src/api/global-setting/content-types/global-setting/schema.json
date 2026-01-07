@@ -1,0 +1,200 @@
+{
+  "kind": "singleType",
+  "collectionName": "global_settings",
+  "info": {
+    "singularName": "global-setting",
+    "pluralName": "global-settings",
+    "displayName": "global-setting",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "default_warehouse_location": {
+      "type": "enumeration",
+      "enum": [
+        "Dhaka"
+      ]
+    },
+    "sku_format": {
+      "type": "string"
+    },
+    "category_code_rules": {
+      "type": "string"
+    },
+    "autofill_enabled": {
+      "type": "boolean"
+    },
+    "default_reorder_level": {
+      "type": "integer"
+    },
+    "default_backorder_allowed": {
+      "type": "boolean"
+    },
+    "shipping_policy": {
+      "type": "blocks"
+    },
+    "return_and_exchange_policy": {
+      "type": "blocks"
+    },
+    "refund_policy": {
+      "type": "blocks"
+    },
+    "redeem_policy": {
+      "type": "blocks"
+    },
+    "cancellation_policy": {
+      "type": "blocks"
+    },
+    "order_policy": {
+      "type": "blocks"
+    },
+    "privacy_policy": {
+      "type": "blocks"
+    },
+    "terms_and_conditions": {
+      "type": "blocks"
+    },
+    "default_currency": {
+      "type": "enumeration",
+      "enum": [
+        "BDT"
+      ]
+    },
+    "contact_email": {
+      "type": "string"
+    },
+    "customer_support_phone": {
+      "type": "string"
+    },
+    "whatsapp_support_number": {
+      "type": "string"
+    },
+    "live_chat_enabled": {
+      "type": "boolean"
+    },
+    "payment_policy": {
+      "type": "blocks"
+    },
+    "faq_url": {
+      "type": "string"
+    },
+    "support_hours": {
+      "type": "string"
+    },
+    "about_us": {
+      "type": "blocks"
+    },
+    "career_info": {
+      "type": "blocks"
+    },
+    "facebook_url": {
+      "type": "string"
+    },
+    "instagram_url": {
+      "type": "string"
+    },
+    "youtube_url": {
+      "type": "string"
+    },
+    "maintenance_mode": {
+      "type": "boolean"
+    },
+    "site_launch_date": {
+      "type": "datetime"
+    },
+    "sitemap_url": {
+      "type": "string"
+    },
+    "loyalty_program_info": {
+      "type": "blocks"
+    },
+    "discount_policy": {
+      "type": "blocks"
+    },
+    "gift_card_policy": {
+      "type": "blocks"
+    },
+    "voucher_policy": {
+      "type": "blocks"
+    },
+    "affiliate_program_info": {
+      "type": "blocks"
+    },
+    "supplier_policy": {
+      "type": "blocks"
+    },
+    "brand_story": {
+      "type": "blocks"
+    },
+    "default_tax_rate": {
+      "type": "decimal"
+    },
+    "digital_wallet_policy": {
+      "type": "blocks"
+    },
+    "newsletter_signup_url": {
+      "type": "string"
+    },
+    "twitter_url": {
+      "type": "string"
+    },
+    "data_protection_policy": {
+      "type": "blocks"
+    },
+    "legal_disclaimer": {
+      "type": "blocks"
+    },
+    "business_registration_number": {
+      "type": "string"
+    },
+    "operating_hours": {
+      "type": "string"
+    },
+    "default_meta_title": {
+      "type": "string"
+    },
+    "default_meta_description": {
+      "type": "blocks"
+    },
+    "google_analytics_id": {
+      "type": "string"
+    },
+    "mobile_app_download_url": {
+      "type": "string"
+    },
+    "api_status_page_url": {
+      "type": "string"
+    },
+    "store_location_google_map": {
+      "type": "string"
+    },
+    "prices_are_tax_inclusive": {
+      "type": "boolean"
+    },
+    "unsold_default": {
+      "type": "decimal"
+    },
+    "margin_defaul": {
+      "type": "decimal"
+    },
+    "allocation_method": {
+      "type": "enumeration",
+      "enum": [
+        "REVENUE_SHARE",
+        "QUANTITY"
+      ]
+    },
+    "rounding_rule": {
+      "type": "enumeration",
+      "enum": [
+        "LINE_2DP_THEN_SUM",
+        "SUM_THEN_2DP"
+      ]
+    },
+    "finance_banner_message": {
+      "type": "string"
+    }
+  }
+}

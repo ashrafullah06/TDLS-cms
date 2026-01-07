@@ -1,0 +1,74 @@
+{
+  "kind": "collectionType",
+  "collectionName": "events_products_collections",
+  "info": {
+    "singularName": "events-products-collection",
+    "pluralName": "events-products-collections",
+    "displayName": "Events_Products_Collection",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "name"
+    },
+    "description": {
+      "type": "blocks"
+    },
+    "type": {
+      "type": "enumeration",
+      "enum": [
+        "pahela boishak",
+        "eid festival",
+        "happy new year"
+      ]
+    },
+    "start_datetime": {
+      "type": "datetime"
+    },
+    "end_datetime": {
+      "type": "datetime"
+    },
+    "priority": {
+      "type": "integer"
+    },
+    "banner_image": {
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ],
+      "type": "media",
+      "multiple": false
+    },
+    "cover_image": {
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ],
+      "type": "media",
+      "multiple": true
+    },
+    "products": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::product.product",
+      "inversedBy": "events_products_collections"
+    },
+    "audience_categories": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::audience-category.audience-category",
+      "inversedBy": "events_products_collections"
+    }
+  }
+}
