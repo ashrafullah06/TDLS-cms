@@ -31,6 +31,7 @@
     "@strapi/provider-upload-aws-s3": "4.25.23",
     "@strapi/strapi": "4.25.23",
     "@strapi/types": "4.25.23",
+    "@swc/core": "1.5.1",
     "ajv": "^8.17.1",
     "ajv-draft-04": "^1.0.0",
     "pdfkit": "^0.13.0",
@@ -39,8 +40,7 @@
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-router-dom": "^5.3.4",
-    "styled-components": "5.3.3",
-    "@swc/core": "1.5.1"
+    "styled-components": "5.3.3"
   },
   "optionalDependencies": {
     "@swc/core-linux-x64-gnu": "1.5.1",

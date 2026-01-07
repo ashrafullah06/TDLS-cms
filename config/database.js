@@ -1,6 +1,8 @@
 // FILE: config/database.js
 'use strict';
 
+const fs = require('fs');
+const path = require('path');
 const { parse } = require('pg-connection-string');
 
 /**
@@ -38,6 +40,76 @@ module.exports = ({ env }) => {
       s = s.slice(1, -1).trim();
     }
     return s;
+  };
+
+  /**
+   * Minimal, dependency-free .env loader.
+   * Purpose: help `strapi build` succeed in environments where env vars are not injected at build-time
+   *          but an env file exists (e.g., Railway build image).
+   *
+   * - Does NOT overwrite existing process.env keys
+   * - Loads in this order (first match wins for missing keys):
+   *   1) .env
+   *   2) .env.<NODE_ENV> (if NODE_ENV is set)
+   *   3) .env.production
+   *   4) .env.development
+   */
+  const loadEnvFilesIfNeeded = () => {
+    try {
+      const nodeEnv = sanitize(process.env.NODE_ENV || env('NODE_ENV') || '').toLowerCase();
+
+      const candidates = ['.env'];
+      if (nodeEnv) candidates.push(`.env.${nodeEnv}`);
+
+      // keep these explicit fallbacks (some repos only keep .env.production / .env.development)
+      if (!candidates.includes('.env.production')) candidates.push('.env.production');
+      if (!candidates.includes('.env.development')) candidates.push('.env.development');
+
+      const loaded = [];
+
+      for (const filename of candidates) {
+        const filePath = path.join(process.cwd(), filename);
+        if (!fs.existsSync(filePath)) continue;
+
+        const raw = fs.readFileSync(filePath, 'utf8');
+        const lines = raw.split(/\r?\n/);
+
+        for (const line of lines) {
+          const trimmed = line.trim();
+          if (!trimmed || trimmed.startsWith('#')) continue;
+
+          // allow `export KEY=...`
+          const normalized = trimmed.startsWith('export ') ? trimmed.slice(7).trim() : trimmed;
+
+          const eq = normalized.indexOf('=');
+          if (eq <= 0) continue;
+
+          const key = normalized.slice(0, eq).trim();
+          let val = normalized.slice(eq + 1).trim();
+
+          // strip surrounding quotes
+          if (
+            (val.startsWith('"') && val.endsWith('"')) ||
+            (val.startsWith("'") && val.endsWith("'"))
+          ) {
+            val = val.slice(1, -1);
+          }
+
+          // only set if not already present
+          if (typeof process.env[key] === 'undefined') {
+            process.env[key] = val;
+          }
+        }
+
+        loaded.push(filename);
+      }
+
+      if (loaded.length) {
+        console.log('[TDLC][db-config] Loaded env file(s):', loaded);
+      }
+    } catch (e) {
+      console.warn('[TDLC][db-config] Env file load skipped due to error:', e?.message || e);
+    }
   };
 
   // Helper: resolve indirection patterns and "key-as-value"
@@ -116,17 +188,27 @@ module.exports = ({ env }) => {
     return raw;
   };
 
-  // 1) Start from DATABASE_URL (may be overridden by develop:owner)
+  // If DB env is missing (common in CI/build containers), try to load env files.
+  // This does not affect localhost behavior (it only fills missing process.env keys).
   let raw =
     env('DATABASE_URL') ||
     env('STRAPI_DB_OWNER_POOLER_CB') ||
     env('STRAPI_DB_USER_POOLER_CB');
 
+  if (!raw) {
+    loadEnvFilesIfNeeded();
+    raw =
+      env('DATABASE_URL') ||
+      env('STRAPI_DB_OWNER_POOLER_CB') ||
+      env('STRAPI_DB_USER_POOLER_CB');
+  }
+
   raw = resolveIndirection(raw);
 
   if (!raw) {
     throw new Error(
-      '[TDLC][db-config] Missing DATABASE_URL / STRAPI_DB_OWNER_POOLER_CB / STRAPI_DB_USER_POOLER_CB'
+      '[TDLC][db-config] Missing DATABASE_URL / STRAPI_DB_OWNER_POOLER_CB / STRAPI_DB_USER_POOLER_CB. ' +
+        'On Railway, set this as a Service/Shared Variable for the Production environment.'
     );
   }
 
@@ -136,16 +218,12 @@ module.exports = ({ env }) => {
   // Validate essentials to avoid silent malformed configs
   if (!parsed || !parsed.host) {
     throw new Error(
-      `[TDLC][db-config] Invalid DATABASE_URL (host missing). Value was: ${maskUrl(
-        raw
-      )}`
+      `[TDLC][db-config] Invalid DATABASE_URL (host missing). Value was: ${maskUrl(raw)}`
     );
   }
   if (!parsed.database) {
     throw new Error(
-      `[TDLC][db-config] Invalid DATABASE_URL (database missing). Value was: ${maskUrl(
-        raw
-      )}`
+      `[TDLC][db-config] Invalid DATABASE_URL (database missing). Value was: ${maskUrl(raw)}`
     );
   }
 

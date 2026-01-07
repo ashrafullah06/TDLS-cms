@@ -13,8 +13,11 @@ export default ({ env }) => {
     return s;
   };
 
+  const maskUrl = (u: string) =>
+    String(u || "").replace(/:\/\/([^:]+):([^@]+)@/i, "://$1:****@");
+
   const resolveIndirection = (value: unknown) => {
-    let raw = sanitize(value);
+    const raw = sanitize(value);
     if (!raw) return raw;
 
     // $VAR
@@ -77,22 +80,25 @@ export default ({ env }) => {
   const useSSL = env.bool("DATABASE_SSL", true);
   const rejectUnauthorized = env.bool("DATABASE_SSL_REJECT_UNAUTHORIZED", false);
 
-  // Safety checks to fail fast instead of connecting with partial info
+  // Safety checks to fail fast without leaking DB details in logs
   if (!host || !database || !user) {
     throw new Error(
-      `Invalid DATABASE_URL: missing host/database/user. host=${String(
-        host
-      )} database=${String(database)} user=${String(user)}`
+      `Invalid DATABASE_URL: missing host/database/user. url=${maskUrl(url)}`
     );
   }
 
   // Neon pooler URLs often include connection_limit=1; clamp pool max to avoid timeouts.
   let connectionLimit: number | null = null;
+  let pgbouncerEnabled = false;
+
   try {
     const u = new URL(url);
     const cl = u.searchParams.get("connection_limit");
+    const pb = u.searchParams.get("pgbouncer");
     const n = cl ? Number(cl) : NaN;
+
     if (Number.isFinite(n) && n > 0) connectionLimit = n;
+    if (typeof pb === "string") pgbouncerEnabled = pb.toLowerCase() === "true";
   } catch {
     // ignore
   }
@@ -105,6 +111,14 @@ export default ({ env }) => {
       : poolMaxRequested;
 
   const timeoutMs = env.int("DATABASE_CONNECTION_TIMEOUT", 60000);
+
+  // pgbouncer-friendly hint (no behavior change; just safer visibility)
+  if (pgbouncerEnabled && poolMin > 0) {
+    // eslint-disable-next-line no-console
+    console.warn(
+      "[TDLC][db-config] pgbouncer=true with DB_POOL_MIN > 0 may keep idle connections open. Consider DB_POOL_MIN=0 in production."
+    );
+  }
 
   return {
     connection: {
