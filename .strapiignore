@@ -2,12 +2,27 @@ node_modules/
 build/
 .cache/
 dist/
+
 .env
 .env.*
 !.env.example
+
+# ignore tooling metadata
+.git/
+.github/
+.vscode/
+.idea/
+
+# OS noise
 .DS_Store
 Thumbs.db
+
+# logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
+
+# uploads should NOT be packaged from repo (keep placeholder)
+public/uploads/*
+!public/uploads/.gitkeep
