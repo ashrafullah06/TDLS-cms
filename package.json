@@ -18,7 +18,7 @@
     "start:user": "dotenv -e .env -- cross-env NODE_OPTIONS=--dns-result-order=ipv4first strapi start",
     "build:user": "dotenv -e .env -- cross-env NODE_OPTIONS=--dns-result-order=ipv4first strapi build",
     "develop:owner": "dotenv -e .env -- cross-env DATABASE_URL=STRAPI_DB_OWNER_POOLER_CB NODE_OPTIONS=--dns-result-order=ipv4first strapi develop",
-    "postinstall": "patch-package && node -e \"const cp=require('child_process');const log=(...a)=>console.log('[swc-fix]',...a);if(process.platform!=='linux') process.exit(0);let ok=true; try{require('@swc/core');}catch(e){ok=false;}if(ok) process.exit(0);let v; try{v=require('@swc/core/package.json').version;}catch(e){log('no @swc/core; skip'); process.exit(0);}const install=(pkg)=>{try{log('install',pkg+'@'+v); cp.execSync('npm i --no-save --no-package-lock '+pkg+'@'+v,{stdio:'inherit'}); return true;}catch(e){return false;}};if(!install('@swc/core-linux-x64-gnu')) install('@swc/core-linux-x64-musl');\""
+    "postinstall": "node -e \"const cp=require('child_process');const log=(...a)=>console.log('[postinstall]',...a);const run=(cmd)=>{try{cp.execSync(cmd,{stdio:'inherit'});return true;}catch(e){return false;}};run('patch-package');if(process.platform!=='linux') process.exit(0);let v;try{v=require('@swc/core/package.json').version;}catch(e){log('no @swc/core; skip');process.exit(0);}const ensure=(pkg)=>{try{require(pkg);return true;}catch(e){return false;}};if(ensure('@swc/core-linux-x64-gnu')||ensure('@swc/core-linux-x64-musl')){log('swc binding already present');process.exit(0);}log('install swc binding for',v);run('npm i --no-save --no-package-lock @swc/core-linux-x64-gnu@'+v) || run('npm i --no-save --no-package-lock @swc/core-linux-x64-musl@'+v);\""
   },
   "dependencies": {
     "@strapi/plugin-cloud": "4.25.23",
@@ -39,7 +39,17 @@
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-router-dom": "^5.3.4",
-    "styled-components": "5.3.3"
+    "styled-components": "5.3.3",
+    "@swc/core": "1.5.1"
+  },
+  "optionalDependencies": {
+    "@swc/core-linux-x64-gnu": "1.5.1",
+    "@swc/core-linux-x64-musl": "1.5.1"
+  },
+  "overrides": {
+    "@swc/core": "1.5.1",
+    "@swc/core-linux-x64-gnu": "1.5.1",
+    "@swc/core-linux-x64-musl": "1.5.1"
   },
   "devDependencies": {
     "@types/node": "^20.19.11",
