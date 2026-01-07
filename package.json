@@ -10,31 +10,25 @@
     "dev": "cross-env NODE_OPTIONS=--dns-result-order=ipv4first strapi develop",
     "develop": "cross-env NODE_OPTIONS=--dns-result-order=ipv4first strapi develop",
     "start": "cross-env NODE_OPTIONS=--dns-result-order=ipv4first strapi start",
-
     "strapi": "cross-env NODE_OPTIONS=--dns-result-order=ipv4first strapi",
-
     "upgrade": "npx @strapi/upgrade latest",
     "upgrade:dry": "npx @strapi/upgrade latest --dry",
-
     "predevelop:owner": "strapi ts:generate-types",
-
     "develop:user": "dotenv -e .env -- cross-env NODE_OPTIONS=--dns-result-order=ipv4first strapi develop",
     "start:user": "dotenv -e .env -- cross-env NODE_OPTIONS=--dns-result-order=ipv4first strapi start",
     "build:user": "dotenv -e .env -- cross-env NODE_OPTIONS=--dns-result-order=ipv4first strapi build",
-
     "develop:owner": "dotenv -e .env -- cross-env DATABASE_URL=STRAPI_DB_OWNER_POOLER_CB NODE_OPTIONS=--dns-result-order=ipv4first strapi develop",
-
     "postinstall": "patch-package"
   },
   "dependencies": {
-    "@strapi/plugin-cloud": "^4.25.23",
-    "@strapi/plugin-content-type-builder": "^4.25.23",
-    "@strapi/plugin-documentation": "^4.25.23",
-    "@strapi/plugin-graphql": "^4.25.23",
-    "@strapi/plugin-upload": "^4.25.23",
+    "@strapi/plugin-cloud": "4.25.23",
+    "@strapi/plugin-content-type-builder": "4.25.23",
+    "@strapi/plugin-documentation": "4.25.23",
+    "@strapi/plugin-graphql": "4.25.23",
+    "@strapi/plugin-upload": "4.25.23",
     "@strapi/plugin-users-permissions": "4.25.23",
-    "@strapi/provider-email-nodemailer": "^4.25.23",
-    "@strapi/provider-upload-aws-s3": "^4.25.23",
+    "@strapi/provider-email-nodemailer": "4.25.23",
+    "@strapi/provider-upload-aws-s3": "4.25.23",
     "@strapi/strapi": "4.25.23",
     "@strapi/types": "4.25.23",
     "ajv": "^8.17.1",
@@ -58,8 +52,8 @@
     "typescript": "^5.9.2"
   },
   "engines": {
-    "node": ">=18 <21",
-    "npm": ">=6.0.0"
+    "node": ">=20.18.1 <21",
+    "npm": ">=10"
   },
   "strapi": {
     "uuid": "e598ffdf-6b75-42d3-bb28-deb0358cc4f8",
