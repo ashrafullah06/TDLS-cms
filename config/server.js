@@ -16,10 +16,12 @@ module.exports = ({ env }) => {
   }
 
   // Canonical public URL (Railway/proxy correctness)
-  const publicUrl = env(
-    "STRAPI_PUBLIC_URL",
-    isProd ? "https://cms.thednalabstore.com" : "http://localhost:1337"
-  );
+  // Prefer STRAPI_PUBLIC_URL, but fall back to common platform variables if present.
+  const publicUrl =
+    env("STRAPI_PUBLIC_URL", "") ||
+    env("PUBLIC_URL", "") ||
+    env("URL", "") ||
+    (isProd ? "https://cms.thednalabstore.com" : "http://localhost:1337");
 
   // Admin URL (relative is safest for same-domain admin)
   const adminUrl = env("ADMIN_PUBLIC_URL", "/admin");
@@ -29,7 +31,9 @@ module.exports = ({ env }) => {
     port: env.int("PORT", 1337),
 
     url: publicUrl,
-    proxy: true,
+
+    // Railway is behind a proxy; keep this enabled (but allow override if needed)
+    proxy: env.bool("PROXY", true),
 
     admin: {
       url: adminUrl,
@@ -37,6 +41,11 @@ module.exports = ({ env }) => {
 
     app: {
       keys: keysFromEnv,
+    },
+
+    // Keep your intended webhook behavior (default = false)
+    webhooks: {
+      populateRelations: env.bool("WEBHOOKS_POPULATE_RELATIONS", false),
     },
   };
 };

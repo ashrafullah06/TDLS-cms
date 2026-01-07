@@ -12,6 +12,9 @@ export default ({ env }) => {
     env("URL", "") ||
     (isProd ? "https://cms.thednalabstore.com" : "http://localhost:1337");
 
+  // Admin URL (relative is safest for same-domain admin)
+  const adminUrl = env("ADMIN_PUBLIC_URL", "/admin");
+
   // In production we must have APP_KEYS. Fail fast if missing.
   const appKeys = env.array("APP_KEYS", []);
   if (isProd && (!appKeys || appKeys.length < 2)) {
@@ -29,6 +32,10 @@ export default ({ env }) => {
 
     // Railway is behind a proxy; enabling proxy improves correct protocol/IP handling
     proxy: env.bool("PROXY", true),
+
+    admin: {
+      url: adminUrl,
+    },
 
     app: {
       keys: appKeys,
