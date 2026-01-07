@@ -9,7 +9,7 @@ module.exports = ({ env }) => {
     .map((s) => s.trim())
     .filter(Boolean);
 
-  // Production-safe defaults (storefront only)
+  // Production-safe defaults
   const prodDefaultOrigins = [
     "https://www.thednalabstore.com",
     "https://thednalabstore.com",
@@ -20,6 +20,8 @@ module.exports = ({ env }) => {
   const devDefaultOrigins = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
+    "http://localhost:1337",
+    "http://127.0.0.1:1337",
     "https://www.thednalabstore.com",
     "https://thednalabstore.com",
     "https://cms.thednalabstore.com",
@@ -29,7 +31,6 @@ module.exports = ({ env }) => {
     envOrigins.length > 0 ? envOrigins : isProd ? prodDefaultOrigins : devDefaultOrigins;
 
   // Cloudflare R2 public media domain (used by uploads)
-  // Keep this aligned with your real public media host.
   const mediaHost = env("MEDIA_PUBLIC_URL", "https://media.thednalabstore.com");
 
   return [
@@ -42,7 +43,6 @@ module.exports = ({ env }) => {
         contentSecurityPolicy: {
           useDefaults: true,
           directives: {
-            // Allow images/media from your R2 public domain (and standard safe sources)
             "img-src": ["'self'", "data:", "blob:", mediaHost],
             "media-src": ["'self'", "data:", "blob:", mediaHost],
           },
@@ -54,7 +54,22 @@ module.exports = ({ env }) => {
       name: "strapi::cors",
       config: {
         origin: origins,
-        headers: "*",
+
+        // ✅ future-proof for cookie/session based flows (and avoids subtle CORS issues)
+        credentials: true,
+
+        // ✅ reduce preflight issues
+        methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS"],
+        headers: [
+          "Content-Type",
+          "Authorization",
+          "Origin",
+          "Accept",
+          "X-Requested-With",
+        ],
+
+        // ✅ keep CORS headers in Strapi error responses too
+        keepHeaderOnError: true,
       },
     },
 
