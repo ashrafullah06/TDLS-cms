@@ -18,7 +18,7 @@
     "start:user": "dotenv -e .env -- cross-env NODE_OPTIONS=--dns-result-order=ipv4first strapi start",
     "build:user": "dotenv -e .env -- cross-env NODE_OPTIONS=--dns-result-order=ipv4first strapi build",
     "develop:owner": "dotenv -e .env -- cross-env DATABASE_URL=STRAPI_DB_OWNER_POOLER_CB NODE_OPTIONS=--dns-result-order=ipv4first strapi develop",
-    "postinstall": "patch-package"
+    "postinstall": "patch-package && node -e \"const cp=require('child_process');const log=(...a)=>console.log('[swc-fix]',...a);if(process.platform!=='linux') process.exit(0);let ok=true; try{require('@swc/core');}catch(e){ok=false;}if(ok) process.exit(0);let v; try{v=require('@swc/core/package.json').version;}catch(e){log('no @swc/core; skip'); process.exit(0);}const install=(pkg)=>{try{log('install',pkg+'@'+v); cp.execSync('npm i --no-save --no-package-lock '+pkg+'@'+v,{stdio:'inherit'}); return true;}catch(e){return false;}};if(!install('@swc/core-linux-x64-gnu')) install('@swc/core-linux-x64-musl');\""
   },
   "dependencies": {
     "@strapi/plugin-cloud": "4.25.23",
