@@ -1,12 +1,31 @@
 // FILE: config/middlewares.js
 
-module.exports = ({ env }) => {
-  const isProd = env("NODE_ENV") === "production";
+"use strict";
 
-  const envOriginsRaw = env("CORS_ORIGINS", "");
+function toStr(v) {
+  return (v ?? "").toString().trim();
+}
+
+function normalizeUrlToOrigin(input) {
+  const s = toStr(input);
+  if (!s) return "";
+  try {
+    // If it's already a full URL, return its origin
+    return new URL(s).origin;
+  } catch {
+    // If someone accidentally provides only hostname, keep it as-is
+    // (CSP will ignore invalid entries; better than crashing boot)
+    return s.replace(/\/+$/, "");
+  }
+}
+
+module.exports = ({ env }) => {
+  const isProd = toStr(env("NODE_ENV")) === "production";
+
+  const envOriginsRaw = toStr(env("CORS_ORIGINS", ""));
   const envOrigins = envOriginsRaw
     .split(",")
-    .map((s) => s.trim())
+    .map((s) => toStr(s))
     .filter(Boolean);
 
   // Production-safe defaults
@@ -28,37 +47,47 @@ module.exports = ({ env }) => {
   ];
 
   const origins =
-    envOrigins.length > 0 ? envOrigins : isProd ? prodDefaultOrigins : devDefaultOrigins;
+    envOrigins.length > 0
+      ? envOrigins
+      : isProd
+      ? prodDefaultOrigins
+      : devDefaultOrigins;
 
-  // Cloudflare R2 public media domain (used by uploads)
-  const mediaHost = env("MEDIA_PUBLIC_URL", "https://media.thednalabstore.com");
+  // Cloudflare R2 public media domain (used by uploads / previews)
+  const mediaPublicUrl = toStr(env("MEDIA_PUBLIC_URL", "https://media.thednalabstore.com"));
+  const mediaOrigin = normalizeUrlToOrigin(mediaPublicUrl);
 
   return [
     "strapi::errors",
 
-    // ✅ Production hardening + allow your media domain in CSP so admin can preview images
+    // Security headers + CSP (allow your R2 custom domain for previews)
     {
       name: "strapi::security",
       config: {
         contentSecurityPolicy: {
           useDefaults: true,
           directives: {
-            "img-src": ["'self'", "data:", "blob:", mediaHost],
-            "media-src": ["'self'", "data:", "blob:", mediaHost],
+            // Keep defaults, extend only what you need
+            "img-src": ["'self'", "data:", "blob:", mediaOrigin].filter(Boolean),
+            "media-src": ["'self'", "data:", "blob:", mediaOrigin].filter(Boolean),
+
+            // Admin may fetch some assets / previews; safe to include the media origin
+            "connect-src": ["'self'", mediaOrigin].filter(Boolean),
           },
         },
       },
     },
 
+    // CORS for storefront/admin to call Strapi APIs
     {
       name: "strapi::cors",
       config: {
         origin: origins,
 
-        // ✅ future-proof for cookie/session based flows (and avoids subtle CORS issues)
+        // supports cookie/session based flows
         credentials: true,
 
-        // ✅ reduce preflight issues
+        // reduce preflight issues
         methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS"],
         headers: [
           "Content-Type",
@@ -68,10 +97,13 @@ module.exports = ({ env }) => {
           "X-Requested-With",
         ],
 
-        // ✅ keep CORS headers in Strapi error responses too
+        // keep CORS headers in Strapi error responses too
         keepHeaderOnError: true,
       },
     },
+
+    // Better perceived speed for API/admin (does not affect R2 itself)
+    "strapi::compression",
 
     "strapi::poweredBy",
     "strapi::logger",

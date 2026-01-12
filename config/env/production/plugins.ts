@@ -1,50 +1,85 @@
 // FILE: config/env/production/plugins.ts
 // SECURITY NOTE: Do NOT hardcode secrets in this file. Keep secrets in Railway/Vercel env vars.
 
-export default ({ env }) => {
+type EnvFn = ((key: string, defaultValue?: any) => any) & {
+  bool: (key: string, defaultValue?: boolean) => boolean;
+  int: (key: string, defaultValue?: number) => number;
+};
+
+function toStr(v: any): string {
+  return (v ?? "").toString().trim();
+}
+
+function stripTrailingSlashes(url: string): string {
+  return url.replace(/\/+$/, "");
+}
+
+function hasValue(v: string): boolean {
+  return !!toStr(v);
+}
+
+export default ({ env }: { env: EnvFn }) => {
   /**
    * Upload provider (Cloudflare R2 / S3-compatible):
-   * - Supports either S3_* or R2_* env naming.
-   * - Only enables aws-s3 when required credentials are present.
-   * - Otherwise falls back to local upload to avoid breaking boot.
+   * - ONLY enables aws-s3 when UPLOAD_PROVIDER=aws-s3 AND required vars exist.
+   * - Otherwise does NOT override anything (falls back to Strapi defaults / base config).
    */
 
-  const bucket = env("S3_BUCKET", "") || env("R2_BUCKET", "");
-  const region = env("S3_REGION", "") || env("R2_REGION", "auto");
-  const accessKeyId = env("S3_ACCESS_KEY_ID", "") || env("R2_ACCESS_KEY_ID", "");
-  const secretAccessKey =
-    env("S3_SECRET_ACCESS_KEY", "") || env("R2_SECRET_ACCESS_KEY", "");
+  const uploadProvider = toStr(env("UPLOAD_PROVIDER", "")).toLowerCase();
+  const enableAwsS3 = uploadProvider === "aws-s3";
 
-  const endpointFromAccount = env("R2_ACCOUNT_ID", "")
-    ? `https://${env("R2_ACCOUNT_ID")}.r2.cloudflarestorage.com`
+  // Support either S3_* or R2_* env naming (prefer S3_* if present, otherwise R2_*)
+  const bucket = toStr(env("S3_BUCKET", "")) || toStr(env("R2_BUCKET", ""));
+  const region = toStr(env("S3_REGION", "")) || toStr(env("R2_REGION", "auto")) || "auto";
+  const accessKeyId =
+    toStr(env("S3_ACCESS_KEY_ID", "")) || toStr(env("R2_ACCESS_KEY_ID", ""));
+  const secretAccessKey =
+    toStr(env("S3_SECRET_ACCESS_KEY", "")) || toStr(env("R2_SECRET_ACCESS_KEY", ""));
+
+  // Endpoint logic (R2 requires an explicit endpoint)
+  const r2AccountId = toStr(env("R2_ACCOUNT_ID", ""));
+  const endpointFromAccount = r2AccountId
+    ? `https://${r2AccountId}.r2.cloudflarestorage.com`
     : "";
 
-  const endpoint =
-    env("S3_ENDPOINT", "") || env("R2_ENDPOINT", "") || endpointFromAccount;
+  const rawEndpoint =
+    toStr(env("S3_ENDPOINT", "")) || toStr(env("R2_ENDPOINT", "")) || endpointFromAccount;
+
+  const endpoint = rawEndpoint ? stripTrailingSlashes(rawEndpoint) : "";
 
   const baseUrl =
-    env("S3_BASE_URL", "") ||
-    env("MEDIA_PUBLIC_URL", "") ||
+    toStr(env("S3_BASE_URL", "")) ||
+    toStr(env("MEDIA_PUBLIC_URL", "")) ||
     "https://media.thednalabstore.com";
 
-  const rootPath = env("S3_ROOT_PATH", "") || env("R2_ROOT_PATH", "") || undefined;
+  // Optional prefix inside bucket (keep blank unless you intentionally want a folder)
+  const rootPath = toStr(env("S3_ROOT_PATH", "")) || toStr(env("R2_ROOT_PATH", "")) || "";
 
-  const hasS3 = !!bucket && !!accessKeyId && !!secretAccessKey;
+  // Path-style for R2 (prefer R2_ key, fallback S3_ key, default true)
+  const forcePathStyle =
+    env.bool("R2_FORCE_PATH_STYLE", env.bool("S3_FORCE_PATH_STYLE", true));
 
-  const upload = hasS3
+  // Cache headers (optional) — safe defaults for static media
+  const cacheControl = toStr(
+    env("R2_CACHE_CONTROL", env("S3_CACHE_CONTROL", "public, max-age=31536000, immutable"))
+  );
+
+  // Enable only when explicitly requested AND all required values exist
+  const hasAllUploadVars =
+    hasValue(bucket) && hasValue(accessKeyId) && hasValue(secretAccessKey) && hasValue(endpoint);
+
+  const upload = enableAwsS3 && hasAllUploadVars
     ? {
         config: {
           provider: "aws-s3",
           providerOptions: {
             // Ensures Strapi returns media URLs on your public media domain
-            baseUrl,
+            baseUrl: stripTrailingSlashes(toStr(baseUrl)),
             rootPath,
-
-            // Strapi v4 provider expects `s3Options`
             s3Options: {
               region,
-              endpoint: endpoint || undefined,
-              forcePathStyle: env.bool("S3_FORCE_PATH_STYLE", true),
+              endpoint,
+              forcePathStyle,
               credentials: {
                 accessKeyId,
                 secretAccessKey,
@@ -54,38 +89,34 @@ export default ({ env }) => {
               },
             },
           },
+          // PutObject options (applies Cache-Control on upload)
           actionOptions: {
-            upload: {},
-            uploadStream: {},
+            upload: { CacheControl: cacheControl },
+            uploadStream: { CacheControl: cacheControl },
             delete: {},
           },
         },
       }
-    : {
-        config: {
-          provider: "local",
-        },
-      };
+    : undefined;
 
   /**
    * Email provider:
-   * - Only configure nodemailer if SMTP credentials are present.
-   * - Otherwise keep provider present but inert (does not block startup).
+   * - Configure nodemailer ONLY if SMTP credentials are present.
+   * - Otherwise do NOT override anything (prevents inert/empty provider config).
    */
-  const smtpHost = env("SMTP_HOST", "");
-  const smtpUser = env("SMTP_USER", "");
-  const smtpPass = env("SMTP_PASS", "");
-
-  const hasSMTP = !!smtpHost && !!smtpUser && !!smtpPass;
+  const smtpHost = toStr(env("SMTP_HOST", ""));
+  const smtpUser = toStr(env("SMTP_USER", ""));
+  const smtpPass = toStr(env("SMTP_PASS", ""));
+  const hasSMTP = hasValue(smtpHost) && hasValue(smtpUser) && hasValue(smtpPass);
 
   const defaultFrom =
-    env("EMAIL_DEFAULT_FROM", "") ||
-    env("SMTP_FROM", "") ||
+    toStr(env("EMAIL_DEFAULT_FROM", "")) ||
+    toStr(env("SMTP_FROM", "")) ||
     "no-reply@thednalabstore.com";
 
   const defaultReplyTo =
-    env("EMAIL_DEFAULT_REPLY_TO", "") ||
-    env("SMTP_REPLY_TO", "") ||
+    toStr(env("EMAIL_DEFAULT_REPLY_TO", "")) ||
+    toStr(env("SMTP_REPLY_TO", "")) ||
     "support@thednalabstore.com";
 
   const email = hasSMTP
@@ -107,24 +138,15 @@ export default ({ env }) => {
           },
         },
       }
-    : {
-        config: {
-          provider: "nodemailer",
-          providerOptions: {},
-          settings: {
-            defaultFrom,
-            defaultReplyTo,
-          },
-        },
-      };
+    : undefined;
 
   // Keep disabled in production
   const documentation = { enabled: false };
   const graphql = { enabled: false };
 
   return {
-    upload,
-    email,
+    ...(upload ? { upload } : {}),
+    ...(email ? { email } : {}),
     documentation,
     graphql,
   };
