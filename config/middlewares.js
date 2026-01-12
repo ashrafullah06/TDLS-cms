@@ -1,31 +1,34 @@
 // FILE: config/middlewares.js
-
 "use strict";
 
 function toStr(v) {
   return (v ?? "").toString().trim();
 }
 
+function stripTrailingSlashes(s) {
+  return toStr(s).replace(/\/+$/, "");
+}
+
 function normalizeUrlToOrigin(input) {
   const s = toStr(input);
   if (!s) return "";
   try {
-    // If it's already a full URL, return its origin
     return new URL(s).origin;
   } catch {
-    // If someone accidentally provides only hostname, keep it as-is
-    // (CSP will ignore invalid entries; better than crashing boot)
-    return s.replace(/\/+$/, "");
+    // If someone accidentally provides only hostname, keep it non-fatal.
+    // Strapi will ignore invalid CSP entries rather than crashing boot.
+    return stripTrailingSlashes(s);
   }
 }
 
 module.exports = ({ env }) => {
   const isProd = toStr(env("NODE_ENV")) === "production";
 
+  // CORS origins: allow overriding via env (comma-separated)
   const envOriginsRaw = toStr(env("CORS_ORIGINS", ""));
   const envOrigins = envOriginsRaw
     .split(",")
-    .map((s) => toStr(s))
+    .map((s) => normalizeUrlToOrigin(s))
     .filter(Boolean);
 
   // Production-safe defaults
@@ -41,9 +44,7 @@ module.exports = ({ env }) => {
     "http://127.0.0.1:3000",
     "http://localhost:1337",
     "http://127.0.0.1:1337",
-    "https://www.thednalabstore.com",
-    "https://thednalabstore.com",
-    "https://cms.thednalabstore.com",
+    ...prodDefaultOrigins,
   ];
 
   const origins =
@@ -54,40 +55,43 @@ module.exports = ({ env }) => {
       : devDefaultOrigins;
 
   // Cloudflare R2 public media domain (used by uploads / previews)
-  const mediaPublicUrl = toStr(env("MEDIA_PUBLIC_URL", "https://media.thednalabstore.com"));
+  const mediaPublicUrl = toStr(
+    env("MEDIA_PUBLIC_URL", "https://media.thednalabstore.com")
+  );
   const mediaOrigin = normalizeUrlToOrigin(mediaPublicUrl);
 
   return [
     "strapi::errors",
 
-    // Security headers + CSP (allow your R2 custom domain for previews)
+    /**
+     * Security headers + CSP
+     * - Keep Strapi defaults
+     * - Allow your media domain for Admin previews + asset rendering
+     */
     {
       name: "strapi::security",
       config: {
         contentSecurityPolicy: {
           useDefaults: true,
           directives: {
-            // Keep defaults, extend only what you need
             "img-src": ["'self'", "data:", "blob:", mediaOrigin].filter(Boolean),
             "media-src": ["'self'", "data:", "blob:", mediaOrigin].filter(Boolean),
 
-            // Admin may fetch some assets / previews; safe to include the media origin
+            // Admin preview / uploads / fetches can require connect-src allowances
             "connect-src": ["'self'", mediaOrigin].filter(Boolean),
           },
         },
       },
     },
 
-    // CORS for storefront/admin to call Strapi APIs
+    /**
+     * CORS for storefront/admin to call Strapi APIs
+     */
     {
       name: "strapi::cors",
       config: {
         origin: origins,
-
-        // supports cookie/session based flows
         credentials: true,
-
-        // reduce preflight issues
         methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS"],
         headers: [
           "Content-Type",
@@ -96,19 +100,33 @@ module.exports = ({ env }) => {
           "Accept",
           "X-Requested-With",
         ],
-
-        // keep CORS headers in Strapi error responses too
         keepHeaderOnError: true,
+      },
+    },
+
+    "strapi::poweredBy",
+    "strapi::logger",
+    "strapi::query",
+
+    /**
+     * Body limits: keep uploads stable (R2 provider still uses Strapi upload endpoints).
+     * Uses env keys if present, otherwise safe defaults.
+     */
+    {
+      name: "strapi::body",
+      config: {
+        formLimit: toStr(env("BODY_FORM_LIMIT", "200mb")),
+        jsonLimit: toStr(env("BODY_JSON_LIMIT", "10mb")),
+        textLimit: toStr(env("BODY_TEXT_LIMIT", "10mb")),
+        formidable: {
+          maxFileSize: env.int("BODY_MAX_FILE_SIZE", 200 * 1024 * 1024), // 200MB
+        },
       },
     },
 
     // Better perceived speed for API/admin (does not affect R2 itself)
     "strapi::compression",
 
-    "strapi::poweredBy",
-    "strapi::logger",
-    "strapi::query",
-    "strapi::body",
     "strapi::session",
     "strapi::favicon",
     "strapi::public",
